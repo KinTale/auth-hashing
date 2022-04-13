@@ -34,7 +34,7 @@ router.post('/login', async (req, res) => {
     })
     //console.log(findUser)
     if (!findUser) {
-        res.status(404)
+        res.status(401)
         res.json('user not found')
     }
     const verify = bcrypt.compareSync(req.body.password, findUser.password)
@@ -44,8 +44,12 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign(req.body.username, secret)
+    
+    res.json({
+        verify: verify, // sending this just so i can use in react to change states.
+        token: token
+    })
    
-    res.json({ JWT: token })
 });
 
 module.exports = router;
